@@ -1,5 +1,6 @@
 package com.example.colorsandvision
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -159,7 +160,7 @@ fun Empleado(){
             })
 
         //Pregunta
-        Text(text = "Periodo",
+        Text(text = "Pregunta",
             color = colorResource(id = R.color.AzulMarino),
             fontFamily = FontFamily.Serif)
         OutlinedTextField(
@@ -212,12 +213,23 @@ fun Empleado(){
         }
 
     }
-}
 
-private fun String.isPasswordValid():Boolean{
-    val passwordRegex = Regex("")
-}
+    fun String.isPasswordValid():Boolean{
+        val passwordRegex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\\\$%^&*()\\\\-_=+,.?\\\":;<>|\\\\[\\\\]{}~]).{8,}\$")
+        return passwordRegex.matches(this)
+    }
 
-private fun String.isEmailValid():Boolean{
-    val passwordRegex = Regex("")
+
+    fun String.isEmailValid():Boolean{
+        val emailRegex = Regex("[a-zA-Z0-9._%+-]+@(gmail\\\\.com|hotmail\\\\.com|outlook\\\\.com|microsoft\\\\.com|zoho\\\\.com|fastmail\\\\.com)")
+        return emailRegex.matches(this)
+    }
+
+    fun isValid():Boolean{
+        var isValido = true
+        if(nombre.isBlank()){
+            //Toast.makeText(this,"Campo obligatorio",Toast.LENGTH_LONG).show()
+        }
+        return isValido
+    }
 }
