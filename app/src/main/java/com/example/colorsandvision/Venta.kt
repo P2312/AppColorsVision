@@ -132,7 +132,7 @@ fun Venta(){
         })
 
         // Total
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(16.dp)) //esta linea me hace un espacio entre los componentes
         OutlinedTextField(value = total, onValueChange = {
             total = it
         }, label={
