@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ColorsAndVisionTheme {
-                Venta()
+                Empleado()
             }
         }
     }

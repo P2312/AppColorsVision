@@ -213,3 +213,11 @@ fun Empleado(){
 
     }
 }
+
+private fun String.isPasswordValid():Boolean{
+    val passwordRegex = Regex("")
+}
+
+private fun String.isEmailValid():Boolean{
+    val passwordRegex = Regex("")
+}
