@@ -49,7 +49,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ColorsAndVisionTheme {
-                Empleado()
+                Restablecer()
             }
         }
     }
@@ -191,6 +191,6 @@ fun LoginInicio(){
 @Composable
 fun GreetingPreview() {
     ColorsAndVisionTheme {
-       LoginExamen()
+       Recuperar()
     }
 }

@@ -36,6 +36,7 @@ fun Empleado() {
     var respuesta by remember { mutableStateOf("") }
     var puesto by remember { mutableStateOf("") }
 
+
     var nombreError by remember { mutableStateOf<String?>(null) }
     var apellidoError by remember { mutableStateOf<String?>(null) }
     var puestoError by remember { mutableStateOf<String?>(null) }
@@ -404,6 +405,16 @@ fun Empleado() {
                 )
             }
         }
+
+        //Respuesta
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(value = respuesta, onValueChange = {
+            respuesta = it
+        }, label={
+            Text(text = "Respuesta",
+                color = colorResource(id = R.color.AzulMarino),
+                fontFamily = FontFamily.Serif)
+        })
 
         Spacer(modifier = Modifier.height(16.dp))
         Button(
