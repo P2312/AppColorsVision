@@ -1,30 +1,15 @@
 package com.example.colorsandvision
 
-import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.Icon
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Warning
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -36,133 +21,359 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-
 @Composable
-fun Empleado(){
-    //Fondo
+fun Empleado() {
+    // Fondo
     BackgroundImage()
+
     var preguntaSelected by remember { mutableStateOf("") }
     var expandedPregunta by remember { mutableStateOf(false) }
-    var email by remember {
-        mutableStateOf("")
-    }
-    var password by remember {
-        mutableStateOf("")
-    }
-    var nombre by remember {
-        mutableStateOf("")
-    }
-    var apellido by remember {
-        mutableStateOf("")
-    }
-    var respuesta by remember {
-        mutableStateOf("")
-    }
-    var puesto by remember {
-        mutableStateOf("")
-    }
-    var pregunta = listOf("¿Cuál es el nombre de tu primera mascota?",
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmarPassword by remember { mutableStateOf("") }
+    var nombre by remember { mutableStateOf("") }
+    var apellido by remember { mutableStateOf("") }
+    var respuesta by remember { mutableStateOf("") }
+    var puesto by remember { mutableStateOf("") }
+
+    var nombreError by remember { mutableStateOf<String?>(null) }
+    var apellidoError by remember { mutableStateOf<String?>(null) }
+    var puestoError by remember { mutableStateOf<String?>(null) }
+    var emailError by remember { mutableStateOf<String?>(null) }
+    var passwordError by remember { mutableStateOf<String?>(null) }
+    var confirmarPasswordError by remember { mutableStateOf<String?>(null) }
+    var passwordHasFocus by remember { mutableStateOf(false) }
+    var confirmarPasswordHasFocus by remember { mutableStateOf(false) }
+
+    val pregunta = listOf(
+        "¿Cuál es el nombre de tu primera mascota?",
         "¿Cuál es tu canción favorita?",
         "¿Cuál es tu película favorita?",
         "¿Cuál es tu color favorito?",
-        "¿En qué ciudad naciste?")
+        "¿En qué ciudad naciste?"
+    )
 
-    Column (
+    fun String.isPasswordValid(): Boolean {
+        val passwordRegex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\\\$%^&*()\\\\-_=+,.?\\\":;<>|\\\\[\\\\]{}~]).{8,}\$")
+        return passwordRegex.matches(this)
+    }
+
+    fun String.isEmailValid(): Boolean {
+        val emailRegex = Regex("[a-zA-Z0-9._%+-]+@(gmail\\.com|hotmail\\.com|outlook\\.com|microsoft\\.com|zoho\\.com|fastmail\\.com)")
+        return emailRegex.matches(this)
+    }
+
+    fun validateFields(): Boolean {
+        var isValid = true
+
+        if (nombre.isBlank()) {
+            nombreError = "Campo obligatorio"
+            isValid = false
+        } else {
+            nombreError = null
+        }
+
+        if (apellido.isBlank()) {
+            apellidoError = "Campo obligatorio"
+            isValid = false
+        } else {
+            apellidoError = null
+        }
+
+        if (puesto.isBlank()) {
+            puestoError = "Campo obligatorio"
+            isValid = false
+        } else {
+            puestoError = null
+        }
+
+        if (email.isBlank()) {
+            emailError = "Campo obligatorio"
+            isValid = false
+        } else if (!email.isEmailValid()) {
+            emailError = "Correo electrónico inválido"
+            isValid = false
+        } else {
+            emailError = null
+        }
+
+        if (password.isBlank()) {
+            passwordError = "Campo obligatorio"
+            isValid = false
+        } else if (!password.isPasswordValid()) {
+            passwordError = "Contraseña inválida"
+            isValid = false
+        } else {
+            passwordError = null
+        }
+
+        if (confirmarPassword.isBlank()) {
+            confirmarPasswordError = "Campo obligatorio"
+            isValid = false
+        } else if (confirmarPassword != password) {
+            confirmarPasswordError = "Las contraseñas no coinciden"
+            isValid = false
+        } else {
+            confirmarPasswordError = null
+        }
+
+        return isValid
+    }
+
+    Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
 
         Spacer(modifier = Modifier.height(16.dp))
         Text(text = "Crear Usuario", fontSize = 28.sp, fontWeight = FontWeight.Bold)
 
-        //Nombre
+        // Nombre
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = nombre, onValueChange = {
-            nombre = it
-        }, label={
-            Text(text = "Nombre",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        // Declarar un nuevo estado para rastrear si el campo de nombre tiene foco
+        var nombreHasFocus by remember { mutableStateOf(false) }
+        // TextField para el nombre
+        OutlinedTextField(
+            value = nombre,
+            onValueChange = { nombre = it },
+            label = {
+                Text(
+                    text = "Nombre",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+            },
+            trailingIcon = {
+                if (nombreError != null && nombreHasFocus) {
+                    Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
+                }
+            },
+            isError = nombreError != null,
+            modifier = Modifier
+                // Lógica para mostrar el error solo cuando se pierde el foco
+                .onFocusChanged { focusState ->
+                    if (!focusState.isFocused) {
+                        nombreError = if (nombre.isBlank()) "Campo obligatorio" else null
+                    }
+                    // Actualizar el estado del foco
+                    nombreHasFocus = focusState.isFocused
+                }
+        )
+        // Mostrar el mensaje de error solo si hay un error y el campo tiene foco
+        if (nombreError != null && nombreHasFocus) {
+            Text(text = nombreError!!, color = Color.Red, fontSize = 12.sp)
+        }
 
-        //Apellido
+        // Apellido
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = apellido, onValueChange = {
-            apellido = it
-        }, label={
-            Text(text = "Apellido",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        var apellidoHasFocus by remember { mutableStateOf(false) }
+        OutlinedTextField(
+            value = apellido,
+            onValueChange = { apellido = it },
+            label = {
+                Text(
+                    text = "Apellido",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+            },
+            trailingIcon = {
+                if (apellidoError != null && apellidoHasFocus) {
+                    Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
+                }
+            },
+            isError = apellidoError != null,
+            modifier = Modifier
+                .onFocusChanged {
+                focusState ->
+                if (!focusState.isFocused) {
+                    apellidoError = if (apellido.isBlank()) "Campo obligatorio" else null
+                }
+                    //Actualizar el estado del foco
+                    apellidoHasFocus = focusState.isFocused
+            }
+        )
+        if (apellidoError != null && apellidoHasFocus) {
+            Text(text = apellidoError!!, color = Color.Red, fontSize = 12.sp)
+        }
 
-        //Puesto
+        // Puesto
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = puesto, onValueChange = {
-            puesto = it
-        }, label={
-            Text(text = "Puesto",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = puesto,
+            onValueChange = { puesto = it },
+            label = {
+                Text(
+                    text = "Puesto",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+            },
+            trailingIcon = {
+                if (puestoError != null) {
+                    Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
+                }
+            },
+            isError = puestoError != null,
+            modifier = Modifier.onFocusChanged { focusState ->
+                if (!focusState.isFocused) {
+                    puestoError = if (puesto.isBlank()) "Campo obligatorio" else null
+                }
+            }
+        )
+        if (puestoError != null) {
+            Text(text = puestoError!!, color = Color.Red, fontSize = 12.sp)
+        }
 
-        //Email
+        // Email
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = email, onValueChange = {
-            email = it
-        }, label={
-            Text(text = "Email",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = {
+                Text(
+                    text = "Email",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+            },
+            trailingIcon = {
+                if (emailError != null) {
+                    Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
+                }
+            },
+            isError = emailError != null,
+            modifier = Modifier.onFocusChanged { focusState ->
+                if (!focusState.isFocused) {
+                    emailError = when {
+                        email.isBlank() -> "Campo obligatorio"
+                        !email.isEmailValid() -> "Correo electrónico inválido"
+                        else -> null
+                    }
+                }
+            }
+        )
+        if (emailError != null) {
+            Text(text = emailError!!, color = Color.Red, fontSize = 12.sp)
+        }
 
-        //Contraseña
+        // Contraseña
         Spacer(modifier = Modifier.height(16.dp))
         var isPasswordVisible by remember { mutableStateOf(false) }
-        OutlinedTextField(value = password, onValueChange = {
-            password = it
-        }, label={
-            Text(text = "Contraseña",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        },visualTransformation = if (isPasswordVisible) VisualTransformation.None else
-            PasswordVisualTransformation(),
-            trailingIcon = {
-                Icon(painter =
-                if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility)
-                else painterResource(id = R.drawable.ic_visibility_off),
-                    contentDescription = null,
-                    modifier = Modifier.clickable {
-                        isPasswordVisible = !isPasswordVisible
-                    }
+        OutlinedTextField(
+            value = password,
+            onValueChange = { password = it },
+            label = {
+                Text(
+                    text = "Contraseña",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
                 )
-            })
+            },
+            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                Row {
+                    if (passwordError != null) {
+                        Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
+                    }
+                    Icon(
+                        painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility) else painterResource(id = R.drawable.ic_visibility_off),
+                        contentDescription = null,
+                        modifier = Modifier.clickable { isPasswordVisible = !isPasswordVisible }
+                    )
+                }
+            },
+            isError = passwordError != null,
+            modifier = Modifier.onFocusChanged { focusState ->
+                if (!focusState.isFocused) {
+                    passwordError = when {
+                        password.isBlank() -> "Campo obligatorio"
+                        !password.isPasswordValid() -> "Contraseña inválida"
+                        else -> null
+                    }
+                }
+                passwordHasFocus = focusState.isFocused
+            }
+        )
+        if (passwordError != null) {
+            Text(text = passwordError!!, color = Color.Red, fontSize = 12.sp)
+        }
+        if (passwordHasFocus) {
+            Box(
+                modifier = Modifier
+                    .size(width = 250.dp, height = 45.dp)
+                    .padding(top = 4.dp)
+            ) {
+                Text(
+                    text = "Puedes usar letras mayúsculas, minúsculas, números y caracteres especiales.",
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+            }
+        }
 
-        //Contraseña validar
+        // Confirmar Contraseña
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = password, onValueChange = {
-            password = it
-        }, label={
-            Text(text = "Validar Contraseña",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        },visualTransformation = if (isPasswordVisible) VisualTransformation.None else
-            PasswordVisualTransformation(),
-            trailingIcon = {
-                Icon(painter =
-                if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility)
-                else painterResource(id = R.drawable.ic_visibility_off),
-                    contentDescription = null,
-                    modifier = Modifier.clickable {
-                        isPasswordVisible = !isPasswordVisible
-                    }
+        OutlinedTextField(
+            value = confirmarPassword,
+            onValueChange = { confirmarPassword = it },
+            label = {
+                Text(
+                    text = "Validar Contraseña",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
                 )
-            })
+            },
+            visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            trailingIcon = {
+                Row {
+                    if (confirmarPasswordError != null) {
+                        Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
+                    }
+                    Icon(
+                        painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility) else painterResource(id = R.drawable.ic_visibility_off),
+                        contentDescription = null,
+                        modifier = Modifier.clickable { isPasswordVisible = !isPasswordVisible }
+                    )
+                }
+            },
+            isError = confirmarPasswordError != null,
+            modifier = Modifier.onFocusChanged { focusState ->
+                if (!focusState.isFocused) {
+                    confirmarPasswordError = when {
+                        confirmarPassword.isBlank() -> "Campo obligatorio"
+                        confirmarPassword != password -> "Las contraseñas no coinciden"
+                        else -> null
+                    }
+                }
+                confirmarPasswordHasFocus = focusState.isFocused
+            }
+        )
+        if (confirmarPasswordError != null) {
+            Text(text = confirmarPasswordError!!, color = Color.Red, fontSize = 12.sp)
+        }
+        if (confirmarPasswordHasFocus) {
+            Box(
+                modifier = Modifier
+                    .size(width = 250.dp, height = 45.dp)
+                    .padding(top = 4.dp)
+            ) {
+                Text(
+                    text = "Recuerda que las contraseñas tienen que coincidir",
+                    color = Color.Gray,
+                    fontSize = 12.sp
+                )
+            }
+        }
 
-        //Pregunta
-        Text(text = "Pregunta",
+        // Pregunta
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(
+            text = "Pregunta",
             color = colorResource(id = R.color.AzulMarino),
-            fontFamily = FontFamily.Serif)
+            fontFamily = FontFamily.Serif
+        )
         OutlinedTextField(
             value = preguntaSelected,
             onValueChange = { preguntaSelected = it },
@@ -195,41 +406,31 @@ fun Empleado(){
         }
 
         Spacer(modifier = Modifier.height(16.dp))
-        Button(onClick = {}
+        Button(
+            onClick = {
+                if (validateFields()) {
+                    // Registro exitoso
+                }
+            }
         ) {
-            Text(text = "Registrarse",
+            Text(
+                text = "Registrarse",
                 color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
+                fontFamily = FontFamily.Serif
+            )
         }
-
 
         Spacer(modifier = Modifier.height(20.dp))
-        TextButton(onClick = {
-            //navegation.navigate("")
-        }) {
-            Text(text = "¿Ya tienes una cuenta? Acceso",
+        TextButton(
+            onClick = {
+                // Navegación a otra pantalla
+            }
+        ) {
+            Text(
+                text = "¿Ya tienes una cuenta? Acceso",
                 color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
+                fontFamily = FontFamily.Serif
+            )
         }
-
-    }
-
-    fun String.isPasswordValid():Boolean{
-        val passwordRegex = Regex("^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[!@#\\\$%^&*()\\\\-_=+,.?\\\":;<>|\\\\[\\\\]{}~]).{8,}\$")
-        return passwordRegex.matches(this)
-    }
-
-
-    fun String.isEmailValid():Boolean{
-        val emailRegex = Regex("[a-zA-Z0-9._%+-]+@(gmail\\\\.com|hotmail\\\\.com|outlook\\\\.com|microsoft\\\\.com|zoho\\\\.com|fastmail\\\\.com)")
-        return emailRegex.matches(this)
-    }
-
-    fun isValid():Boolean{
-        var isValido = true
-        if(nombre.isBlank()){
-            //Toast.makeText(this,"Campo obligatorio",Toast.LENGTH_LONG).show()
-        }
-        return isValido
     }
 }
