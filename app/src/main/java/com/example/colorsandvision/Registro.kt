@@ -31,12 +31,8 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
-@Composable
-fun LoginRegistro(){
-    FondoRegistro()
-    Registro()
-}
 
 @Composable
 fun FondoRegistro(){
@@ -55,8 +51,11 @@ fun FondoRegistro(){
 }
 
 @Composable
-fun Registro(){
+fun RegistroPaciente(navigationController: NavHostController){
     FondoRegistro()
+
+    val navegation = navigationController
+
     var nombre by remember {
         mutableStateOf("")
     }
@@ -185,7 +184,9 @@ fun Registro(){
         Button(modifier = Modifier
             .width(200.dp)
             .height(50.dp),
-            onClick = {  },
+            onClick = {
+                navegation.navigate("Examen")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)),
             shape = CutCornerShape(8.dp)
@@ -200,7 +201,7 @@ fun Registro(){
         //Boton cancelar
         Spacer(modifier = Modifier.height(16.dp))
         Button(modifier = Modifier.width(200.dp).height(50.dp),
-            onClick = {  },
+            onClick = { navegation.navigate("Menu") },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)

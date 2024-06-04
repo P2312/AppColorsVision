@@ -2,7 +2,9 @@ package com.example.colorsandvision
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.*
@@ -20,11 +22,15 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun Empleado() {
+fun Empleado(navigationController: NavHostController) {
+
     // Fondo
     BackgroundImage()
+    val scroll = rememberScrollState(0) //Estado scroll
+    val navegation = navigationController
 
     var preguntaSelected by remember { mutableStateOf("") }
     var expandedPregunta by remember { mutableStateOf(false) }
@@ -122,7 +128,9 @@ fun Empleado() {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(scroll)   //Habilitar el scroll verticalmente
+            .navigationBarsPadding(), // Habilitar padding para la barra de navegación,
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -420,7 +428,7 @@ fun Empleado() {
         Button(
             onClick = {
                 if (validateFields()) {
-                    // Registro exitoso
+                    navegation.navigate("Menu") //o al login
                 }
             }
         ) {
@@ -434,7 +442,7 @@ fun Empleado() {
         Spacer(modifier = Modifier.height(20.dp))
         TextButton(
             onClick = {
-                // Navegación a otra pantalla
+                navegation.navigate("Login")
             }
         ) {
             Text(

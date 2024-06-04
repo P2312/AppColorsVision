@@ -46,10 +46,14 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun Recuperar (){
+fun Recuperar (navigationController: NavHostController){
     BackgroundImage()
+
+    val navegation = navigationController
+
     var email by remember { mutableStateOf("") }
     var respuesta by remember { mutableStateOf("") }
 
@@ -121,7 +125,7 @@ fun Recuperar (){
 }
 
 @Composable
-fun Restablecer(){
+fun Restablecer(navigationController: NavHostController){
     BackgroundImage()
 
     var password by remember { mutableStateOf("") }

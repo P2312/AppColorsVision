@@ -41,6 +41,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.colorsandvision.Navegation.NavManager
 import com.example.colorsandvision.ui.theme.ColorsAndVisionTheme
 
 class MainActivity : ComponentActivity() {
@@ -49,16 +51,17 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             ColorsAndVisionTheme {
-                Restablecer()
+                NavManager()
             }
         }
     }
 }
 
 @Composable
-fun Login(){
+fun Login(navigationController: NavHostController){
+    val navegation = navigationController
     BackgroundImage()
-    LoginInicio()
+    LoginInicio(navegation)
 }
 
 @Composable
@@ -78,7 +81,7 @@ fun BackgroundImage(){
 }
 
 @Composable
-fun LoginInicio(){
+fun LoginInicio(navegation:NavHostController){
     var email by remember {
         mutableStateOf("")
     }
@@ -150,7 +153,7 @@ fun LoginInicio(){
                 fontFamily = FontFamily.Serif,
                 modifier = Modifier
                     .clickable {
-                        //navegation.navigate("Recuperar")
+                        navegation.navigate("Recuperar")
                     },
                 color = Color.Gray
             )
@@ -162,7 +165,9 @@ fun LoginInicio(){
         Button(modifier = Modifier
             .width(150.dp)
             .height(50.dp),
-            onClick = { },
+            onClick = {
+                navegation.navigate("Menu")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)),
             shape = CutCornerShape(8.dp)
@@ -174,7 +179,7 @@ fun LoginInicio(){
 
         Spacer(modifier = Modifier.height(10.dp))
         TextButton(onClick = {
-            //navegation.navigate("Registro")
+            navegation.navigate("Empleado")
         }
 
             ) {
@@ -191,6 +196,6 @@ fun LoginInicio(){
 @Composable
 fun GreetingPreview() {
     ColorsAndVisionTheme {
-       Recuperar()
+
     }
 }

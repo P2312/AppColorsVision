@@ -22,12 +22,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 
-@Composable
-fun LoginMenu(){
-    Fondo()
-    Menu()
-}
 
 @Composable
 fun Fondo(){
@@ -46,8 +42,9 @@ fun Fondo(){
 }
 
 @Composable
-fun Menu(){
-
+fun Menu(navigationController: NavHostController){
+    val navegation = navigationController
+    Fondo()
     Column (
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -55,8 +52,12 @@ fun Menu(){
     ){
 
         //Regitrar
-        Button(modifier = Modifier.width(200.dp).height(50.dp),
-            onClick = {  },
+        Button(modifier = Modifier
+            .width(200.dp)
+            .height(50.dp),
+            onClick = {
+                navegation.navigate("Paciente")
+            },
             colors = ButtonDefaults.buttonColors(
             containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)
@@ -70,8 +71,12 @@ fun Menu(){
 
         //Examen
         Spacer(modifier = Modifier.height(40.dp))
-        Button(modifier = Modifier.width(200.dp).height(50.dp),
-            onClick = {  },
+        Button(modifier = Modifier
+            .width(200.dp)
+            .height(50.dp),
+            onClick = {
+                navegation.navigate("Examen")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)
@@ -85,8 +90,12 @@ fun Menu(){
 
         //Catalogo
         Spacer(modifier = Modifier.height(40.dp))
-        Button(modifier = Modifier.width(200.dp).height(50.dp),
-            onClick = {  },
+        Button(modifier = Modifier
+            .width(200.dp)
+            .height(50.dp),
+            onClick = {
+                navegation.navigate("Catalogo")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)
@@ -100,8 +109,12 @@ fun Menu(){
 
         //Compra
         Spacer(modifier = Modifier.height(40.dp))
-        Button(modifier = Modifier.width(200.dp).height(50.dp),
-            onClick = {  },
+        Button(modifier = Modifier
+            .width(200.dp)
+            .height(50.dp),
+            onClick = {
+                navegation.navigate("Venta")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)

@@ -18,27 +18,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavHostController
 
 @Composable
-fun Catalogo(){
-    TopAppBar(
-        title = {
-            Text(text = "Registro",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif,
-                fontWeight = FontWeight.Normal
-            )
-        },
-        navigationIcon = {
-            IconButton(onClick = { /*TODO*/ }) {
-                Icon(imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Regresar",
-                    tint = colorResource(id = R.color.AzulMarino)
-                )
-            }
-        }
-    )
-    //Cuestionario
+fun Catalogo(navigationController: NavHostController){
+
+    val navegation = navigationController
 
     Column (
         modifier = Modifier.fillMaxSize(),

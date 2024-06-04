@@ -44,12 +44,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.navigation.NavHostController
 
-@Composable
-fun LoginExamen(){
-    FondoExamen()
-
-}
 
 @Composable
 fun FondoExamen(){
@@ -67,11 +63,14 @@ fun FondoExamen(){
     }
 }
 
-// Examen dando click al menu
+
 @Composable
-fun ExamenMenu(){
+fun ExamenVista(navigationController: NavHostController){
     FondoExamen()
-    var celular by remember { mutableStateOf("") }
+
+    val navegation = navigationController
+
+    var IDPaciente by remember { mutableStateOf("") }
     var lineaOD by remember { mutableStateOf("") }
     var lineaOI by remember { mutableStateOf("") }
     var lineaAOOI by remember { mutableStateOf("") }
@@ -108,10 +107,10 @@ fun ExamenMenu(){
         // Buscador
         Spacer(modifier = Modifier.height(16.dp))
         var buscador by remember { mutableStateOf(false) }
-        OutlinedTextField(value = celular, onValueChange = {
-            celular = it
+        OutlinedTextField(value = IDPaciente, onValueChange = {
+            IDPaciente = it
         }, label={
-            Text(text = "Celular",
+            Text(text = "ID Paciente",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif)
         }, trailingIcon ={
@@ -252,7 +251,9 @@ fun ExamenMenu(){
         Button(modifier = Modifier
             .width(200.dp)
             .height(50.dp),
-            onClick = {  },
+            onClick = {
+                navegation.navigate("Menu")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)
             ),
@@ -264,21 +265,6 @@ fun ExamenMenu(){
                 fontFamily = FontFamily.Serif)
         }
 
-        // Boton regresar
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(modifier = Modifier
-            .width(200.dp)
-            .height(50.dp),
-            onClick = {  },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xff64BDCD)
-            ),
-            shape = CutCornerShape(8.dp)
-        ) {
-            Text(text = "Regresar",
-                color = colorResource(id = R.color.AzulMarino),
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif)
-        }
+
     }
 }

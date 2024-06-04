@@ -7,10 +7,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -35,10 +39,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 
 @Composable
-fun Venta(){
+fun Venta(navigationController: NavHostController){
     FondoRegistro()
+    val scroll = rememberScrollState(0) //Estado scroll
+    val navegation = navigationController
+
+    var IDPaciente by remember { mutableStateOf("") }
     var fechav by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var modelo by remember { mutableStateOf("") }
@@ -49,7 +58,9 @@ fun Venta(){
     var total by remember { mutableStateOf("") }
 
     Column (
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .verticalScroll(scroll)   //Habilitar el scroll verticalmente
+            .navigationBarsPadding(), // Habilitar padding para la barra de navegación,
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ){
@@ -63,18 +74,34 @@ fun Venta(){
             fontFamily = FontFamily.Serif,
             color = colorResource(id = R.color.AzulMarino))
 
+        // Buscador
+        Spacer(modifier = Modifier.height(16.dp))
+        var buscador by remember { mutableStateOf(false) }
+        OutlinedTextField(value = IDPaciente, onValueChange = {
+            IDPaciente = it
+        }, label={
+            Text(text = "ID Paciente",
+                color = colorResource(id = R.color.AzulMarino),
+                fontFamily = FontFamily.Serif)
+        }, trailingIcon ={
+            Icon(imageVector = Icons.Default.Search, contentDescription = "Buscador")
+        })
+
         //Fecha y Nombre
         Spacer(modifier = Modifier.height(16.dp))
         Card (modifier = Modifier
             .width(290.dp)
-            .height(90.dp),
+            .height(590.dp),
             elevation = CardDefaults.cardElevation(1.dp),//Elevacion de la card
-            colors = CardDefaults.cardColors(containerColor = Color.Transparent),
+            colors = CardDefaults.cardColors(containerColor = Color.White),
             shape = CutCornerShape(8.dp)
         ){
-            // Nombre, Edad y Enfermedad
+            // Nombre y fecha
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "  Fecha: \n  Nombre: ",
+            Text(text = "  Fecha: \n  Nombre: \n  Edad: \n  Enfermedad: \n" +
+                    "  Linea OD: \n  Linea OI: \n  Linea AOOI: \n  Linea AOOI: \n" +
+                    "  Esfera OD: \n  Esfera OI: \n  Cilindro OD: \n  Cilindro OI: \n" +
+                    "  Presbicia OD: \n  Presbicia OD: \n  Observaciones: \n",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif,
                 lineHeight = 2.em)
@@ -146,7 +173,9 @@ fun Venta(){
         Button(modifier = Modifier
             .width(200.dp)
             .height(50.dp),
-            onClick = {  },
+            onClick = {
+                navegation.navigate("Menu")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)
