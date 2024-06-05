@@ -2,6 +2,7 @@
 
 package com.example.colorsandvision
 
+import android.icu.util.Calendar
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -40,15 +41,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import java.text.DateFormat
 
 @Composable
 fun Venta(navigationController: NavHostController){
     FondoRegistro()
     val scroll = rememberScrollState(0) //Estado scroll
     val navegation = navigationController
+    val calendar = Calendar.getInstance().time
+    val dateFormat = DateFormat.getDateInstance().format(calendar)
 
     var IDPaciente by remember { mutableStateOf("") }
-    var fechav by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
     var modelo by remember { mutableStateOf("") }
     var serie by remember { mutableStateOf("") }
@@ -98,7 +101,7 @@ fun Venta(navigationController: NavHostController){
         ){
             // Nombre y fecha
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "  Fecha: \n  Nombre: \n  Edad: \n  Enfermedad: \n" +
+            Text(text = "  Fecha:$dateFormat \n  Nombre: \n  Edad: \n  Enfermedad: \n" +
                     "  Linea OD: \n  Linea OI: \n  Linea AOOI: \n  Linea AOOI: \n" +
                     "  Esfera OD: \n  Esfera OI: \n  Cilindro OD: \n  Cilindro OI: \n" +
                     "  Presbicia OD: \n  Presbicia OD: \n  Observaciones: \n",

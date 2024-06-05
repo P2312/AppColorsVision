@@ -3,6 +3,7 @@ package com.example.colorsandvision
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -85,13 +86,6 @@ fun Empleado(navigationController: NavHostController) {
             isValid = false
         } else {
             apellidoError = null
-        }
-
-        if (puesto.isBlank()) {
-            puestoError = "Campo obligatorio"
-            isValid = false
-        } else {
-            puestoError = null
         }
 
         if (email.isBlank()) {
@@ -205,34 +199,6 @@ fun Empleado(navigationController: NavHostController) {
         )
         if (apellidoError != null && apellidoHasFocus) {
             Text(text = apellidoError!!, color = Color.Red, fontSize = 12.sp)
-        }
-
-        // Puesto
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(
-            value = puesto,
-            onValueChange = { puesto = it },
-            label = {
-                Text(
-                    text = "Puesto",
-                    color = colorResource(id = R.color.AzulMarino),
-                    fontFamily = FontFamily.Serif
-                )
-            },
-            trailingIcon = {
-                if (puestoError != null) {
-                    Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
-                }
-            },
-            isError = puestoError != null,
-            modifier = Modifier.onFocusChanged { focusState ->
-                if (!focusState.isFocused) {
-                    puestoError = if (puesto.isBlank()) "Campo obligatorio" else null
-                }
-            }
-        )
-        if (puestoError != null) {
-            Text(text = puestoError!!, color = Color.Red, fontSize = 12.sp)
         }
 
         // Email
@@ -430,13 +396,14 @@ fun Empleado(navigationController: NavHostController) {
                 if (validateFields()) {
                     navegation.navigate("Menu") //o al login
                 }
-            }
+            },colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xff1C2D66)),
+            shape = CutCornerShape(8.dp)
         ) {
             Text(
                 text = "Registrarse",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif
-            )
+                fontFamily = FontFamily.Serif,
+                fontWeight = FontWeight.Bold)
         }
 
         Spacer(modifier = Modifier.height(20.dp))

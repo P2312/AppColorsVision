@@ -107,7 +107,9 @@ fun Recuperar (navigationController: NavHostController){
         Button(modifier = Modifier
             .width(200.dp)
             .height(50.dp),
-            onClick = {  },
+            onClick = {
+                navegation.navigate("Restablecer")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)
             ),
@@ -128,6 +130,7 @@ fun Recuperar (navigationController: NavHostController){
 fun Restablecer(navigationController: NavHostController){
     BackgroundImage()
 
+    val navegation = navigationController
     var password by remember { mutableStateOf("") }
     var confirmarPassword by remember { mutableStateOf("") }
     val scroll = rememberScrollState(0) //Estado scroll
@@ -189,7 +192,9 @@ fun Restablecer(navigationController: NavHostController){
         Button(modifier = Modifier
             .width(200.dp)
             .height(50.dp),
-            onClick = {  },
+            onClick = {
+                navegation.navigate("Login")
+            },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)
             ),
