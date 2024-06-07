@@ -51,8 +51,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.colorsandvision.Components.Alert
 import com.example.colorsandvision.Navegation.NavManager
 import com.example.colorsandvision.ui.theme.ColorsAndVisionTheme
+import com.example.colorsandvision.viewModels.LoginViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.sql.Connection
@@ -61,9 +63,6 @@ import java.sql.DriverManager
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Habilitar políticas de red en el hilo principal (no recomendado para producción)
-        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
-        StrictMode.setThreadPolicy(policy)
 
         enableEdgeToEdge()
         setContent {
@@ -73,79 +72,13 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyApp() {
-    var data by remember { mutableStateOf<List<String>>(emptyList()) }
 
-    LaunchedEffect(Unit) {
-        withContext(Dispatchers.IO) {
-            val connector = MySQLConnector(
-                url = "jdbc:mysql://your-database-url:3306/your-database-name",
-                user = "your-database-user",
-                password = "your-database-password"
-            )
-            data = connector.getData("SELECT your_column_name FROM your_table_name")
-        }
-    }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text("MySQL Data") }
-            )
-        }
-    ) {
-        LazyColumn(modifier = Modifier.padding(16.dp)) {
-            items(data) { item ->
-                Text(text = item, modifier = Modifier.padding(8.dp))
-            }
-        }
-    }
-}
-class MySQLConnector(
-    private val url: String,
-    private val user: String,
-    private val password: String
-) {
-
-    init {
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver")
-        } catch (e: ClassNotFoundException) {
-            e.printStackTrace()
-        }
-    }
-
-    fun getData(query: String): List<String> {
-        val dataList = mutableListOf<String>()
-
-        try {
-            val connection: Connection = DriverManager.getConnection(url, user, password)
-            val statement = connection.createStatement()
-            val resultSet = statement.executeQuery(query)
-
-            while (resultSet.next()) {
-                val columnValue = resultSet.getString("your_column_name")
-                dataList.add(columnValue)
-            }
-
-            resultSet.close()
-            statement.close()
-            connection.close()
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-
-        return dataList
-    }
-}
 @Composable
 fun Login(navigationController: NavHostController){
     val navegation = navigationController
+    val loginVM = LoginViewModel()
     BackgroundImage()
-    LoginInicio(navegation)
+    LoginInicio(navegation, loginVM)
 }
 
 @Composable
@@ -165,7 +98,7 @@ fun BackgroundImage(){
 }
 
 @Composable
-fun LoginInicio(navegation:NavHostController){
+fun LoginInicio(navegation:NavHostController, loginVM: LoginViewModel){
     var email by remember {
         mutableStateOf("")
     }
@@ -205,22 +138,22 @@ fun LoginInicio(navegation:NavHostController){
         })
 
         Spacer(modifier = Modifier.height(10.dp))
-        var isPasswordVisible by remember { mutableStateOf(false) }
+        var PasswordVisible by remember { mutableStateOf(false) }
         OutlinedTextField(value = password, onValueChange = {
             password = it
         }, label={
             Text(text = "Contraseña",
                 fontFamily = FontFamily.Serif,
                 color = colorResource(id = R.color.AzulMarino))
-        },visualTransformation = if (isPasswordVisible) VisualTransformation.None else
+        },visualTransformation = if (PasswordVisible) VisualTransformation.None else
             PasswordVisualTransformation(),
             trailingIcon = {
                 Icon(painter =
-                if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility)
+                if (PasswordVisible) painterResource(id = R.drawable.ic_visibility_off)
                 else painterResource(id = R.drawable.ic_visibility),
                     contentDescription = null,
                     modifier = Modifier.clickable {
-                        isPasswordVisible = !isPasswordVisible
+                        PasswordVisible = !PasswordVisible
                     }
                 )
             })
@@ -250,7 +183,10 @@ fun LoginInicio(navegation:NavHostController){
             .width(150.dp)
             .height(50.dp),
             onClick = {
-                navegation.navigate("Menu")
+                loginVM.login(email, password) {
+                    navegation.navigate("Menu")
+                }
+
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)),
@@ -260,6 +196,15 @@ fun LoginInicio(navegation:NavHostController){
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold)
         }
+        if (loginVM.showAlert) {
+            Alert(
+                title = "Alerta",
+                message = "Usuario y/o Contraseña Incorrectos",
+                confirmText = "Aceptar",
+                onConfirmClick = { loginVM.closeAlert() }) {
+            }
+        }
+
 
         Spacer(modifier = Modifier.height(10.dp))
         TextButton(onClick = {

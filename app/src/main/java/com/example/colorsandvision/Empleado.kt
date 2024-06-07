@@ -1,10 +1,11 @@
 package com.example.colorsandvision
 
+
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Warning
@@ -18,35 +19,44 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.colorsandvision.Components.Alert
+import com.example.colorsandvision.viewModels.LoginViewModel
+
+
 
 @Composable
-fun Empleado(navigationController: NavHostController) {
-
-    // Fondo
-    BackgroundImage()
-    val scroll = rememberScrollState(0) //Estado scroll
+fun Empleado(navigationController: NavHostController){
     val navegation = navigationController
+    val loginVM = LoginViewModel()
+    BackgroundImage()
+    LoginEmpleado(navegation, loginVM)
+}
+
+@Composable
+fun LoginEmpleado(navegation:NavHostController, loginVM: LoginViewModel) {
+
+    val scroll = rememberScrollState(0) //Estado scroll
+
+
 
     var preguntaSelected by remember { mutableStateOf("") }
     var expandedPregunta by remember { mutableStateOf(false) }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirmarPassword by remember { mutableStateOf("") }
-    var nombre by remember { mutableStateOf("") }
-    var apellido by remember { mutableStateOf("") }
+    var username by remember { mutableStateOf("") }
+    var userapellido by remember { mutableStateOf("") }
     var respuesta by remember { mutableStateOf("") }
-    var puesto by remember { mutableStateOf("") }
+
 
 
     var nombreError by remember { mutableStateOf<String?>(null) }
     var apellidoError by remember { mutableStateOf<String?>(null) }
-    var puestoError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
     var passwordError by remember { mutableStateOf<String?>(null) }
     var confirmarPasswordError by remember { mutableStateOf<String?>(null) }
@@ -67,21 +77,21 @@ fun Empleado(navigationController: NavHostController) {
     }
 
     fun String.isEmailValid(): Boolean {
-        val emailRegex = Regex("[a-zA-Z0-9._%+-]+@(gmail\\.com|hotmail\\.com|outlook\\.com|microsoft\\.com|zoho\\.com|fastmail\\.com)")
+        val emailRegex = Regex("[a-zA-Z0-9._%+-]+@(gmail\\.com|hotmail\\.com|outlook\\.com|microsoft\\.com|zoho\\.com|yahoo\\.com)")
         return emailRegex.matches(this)
     }
 
     fun validateFields(): Boolean {
         var isValid = true
 
-        if (nombre.isBlank()) {
+        if (username.isBlank()) {
             nombreError = "Campo obligatorio"
             isValid = false
         } else {
             nombreError = null
         }
 
-        if (apellido.isBlank()) {
+        if (userapellido.isBlank()) {
             apellidoError = "Campo obligatorio"
             isValid = false
         } else {
@@ -122,7 +132,8 @@ fun Empleado(navigationController: NavHostController) {
     }
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .verticalScroll(scroll)   //Habilitar el scroll verticalmente
             .navigationBarsPadding(), // Habilitar padding para la barra de navegación,
         verticalArrangement = Arrangement.Center,
@@ -138,8 +149,8 @@ fun Empleado(navigationController: NavHostController) {
         var nombreHasFocus by remember { mutableStateOf(false) }
         // TextField para el nombre
         OutlinedTextField(
-            value = nombre,
-            onValueChange = { nombre = it },
+            value = username,
+            onValueChange = { username = it },
             label = {
                 Text(
                     text = "Nombre",
@@ -157,7 +168,7 @@ fun Empleado(navigationController: NavHostController) {
                 // Lógica para mostrar el error solo cuando se pierde el foco
                 .onFocusChanged { focusState ->
                     if (!focusState.isFocused) {
-                        nombreError = if (nombre.isBlank()) "Campo obligatorio" else null
+                        nombreError = if (username.isBlank()) "Campo obligatorio" else null
                     }
                     // Actualizar el estado del foco
                     nombreHasFocus = focusState.isFocused
@@ -172,8 +183,8 @@ fun Empleado(navigationController: NavHostController) {
         Spacer(modifier = Modifier.height(16.dp))
         var apellidoHasFocus by remember { mutableStateOf(false) }
         OutlinedTextField(
-            value = apellido,
-            onValueChange = { apellido = it },
+            value = userapellido,
+            onValueChange = { userapellido = it },
             label = {
                 Text(
                     text = "Apellido",
@@ -191,7 +202,7 @@ fun Empleado(navigationController: NavHostController) {
                 .onFocusChanged {
                 focusState ->
                 if (!focusState.isFocused) {
-                    apellidoError = if (apellido.isBlank()) "Campo obligatorio" else null
+                    apellidoError = if (userapellido.isBlank()) "Campo obligatorio" else null
                 }
                     //Actualizar el estado del foco
                     apellidoHasFocus = focusState.isFocused
@@ -253,7 +264,8 @@ fun Empleado(navigationController: NavHostController) {
                         Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
                     }
                     Icon(
-                        painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility) else painterResource(id = R.drawable.ic_visibility_off),
+                        painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility_off)
+                        else painterResource(id = R.drawable.ic_visibility),
                         contentDescription = null,
                         modifier = Modifier.clickable { isPasswordVisible = !isPasswordVisible }
                     )
@@ -307,7 +319,8 @@ fun Empleado(navigationController: NavHostController) {
                         Icon(Icons.Default.Warning, contentDescription = null, tint = Color.Red)
                     }
                     Icon(
-                        painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility) else painterResource(id = R.drawable.ic_visibility_off),
+                        painter = if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility_off)
+                        else painterResource(id = R.drawable.ic_visibility),
                         contentDescription = null,
                         modifier = Modifier.clickable { isPasswordVisible = !isPasswordVisible }
                     )
@@ -342,7 +355,7 @@ fun Empleado(navigationController: NavHostController) {
             }
         }
 
-        // Pregunta
+        /*Pregunta
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "Pregunta",
@@ -388,13 +401,17 @@ fun Empleado(navigationController: NavHostController) {
             Text(text = "Respuesta",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif)
-        })
+        })*/
 
+        //Boton para registrarse
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             onClick = {
                 if (validateFields()) {
-                    navegation.navigate("Menu") //o al login
+                        loginVM.createUser(email, password, username, userapellido) {
+                            navegation.navigate("Login")
+                        }
+
                 }
             },colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)),
@@ -405,8 +422,16 @@ fun Empleado(navigationController: NavHostController) {
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold)
         }
+        if (loginVM.showAlert) {
+            Alert(
+                title = "Alerta",
+                message = "Usuario No Creado",
+                confirmText = "Aceptar",
+                onConfirmClick = { loginVM.closeAlert() }) {
+            }
+        }
 
-        Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(20.dp))
         TextButton(
             onClick = {
                 navegation.navigate("Login")
