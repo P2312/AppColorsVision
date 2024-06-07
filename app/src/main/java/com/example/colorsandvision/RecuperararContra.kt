@@ -18,8 +18,6 @@ import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -34,22 +32,20 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import com.example.colorsandvision.Components.Alert
+import com.example.colorsandvision.viewModels.LoginViewModel
 
 @Composable
-fun Recuperar (navigationController: NavHostController){
+fun Recuperar(navigationController: NavHostController, viewModel: LoginViewModel = viewModel()) {
     BackgroundImage()
 
     val navegation = navigationController
@@ -57,10 +53,26 @@ fun Recuperar (navigationController: NavHostController){
     var email by remember { mutableStateOf("") }
     var respuesta by remember { mutableStateOf("") }
 
-    Column (modifier = Modifier.fillMaxSize(),
+    if (viewModel.showAlert) {
+        Alert(
+            title = "Restablecer contraseña",
+            message = viewModel.alertMessage,
+            confirmText = "Sí",
+            onConfirmClick = {
+                viewModel.sendPasswordResetEmail(viewModel.alertEmail)
+                viewModel.closeAlert()
+            },
+            onDismissClick = {
+                viewModel.closeAlert()
+            }
+        )
+    }
+
+    Column(
+        modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
-    ){
+    ) {
         Spacer(modifier = Modifier.height(20.dp))
         Text(text = "Recuperar Contraseña", fontSize = 28.sp, fontWeight = FontWeight.Bold)
 
@@ -68,143 +80,67 @@ fun Recuperar (navigationController: NavHostController){
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(value = email, onValueChange = {
             email = it
-        }, label={
-            Text(text = "Email",
+        }, label = {
+            Text(
+                text = "Email",
                 color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        }, trailingIcon ={
+                fontFamily = FontFamily.Serif
+            )
+        }, trailingIcon = {
             Icon(imageVector = Icons.Default.Check, contentDescription = "Verificar")
         })
 
-        //Card pregunta
+        // Card pregunta
         Spacer(modifier = Modifier.height(16.dp))
-        Card (modifier = Modifier
-            .width(300.dp)
-            .height(70.dp),
-            //elevation = CardDefaults.cardElevation(1.dp),//Elevacion de la card
+        Card(
+            modifier = Modifier
+                .width(300.dp)
+                .height(70.dp),
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
-            shape = CutCornerShape(8.dp)){
-            // Nombre, Edad y Enfermedad
+            shape = CutCornerShape(8.dp)
+        ) {
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "  Pregunta \n  ¿Qué comiste ayer?   ",
+            Text(
+                text = "  Pregunta \n  ¿Qué comiste ayer?   ",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif,
-                lineHeight = 2.em)
+                lineHeight = 2.em
+            )
             Spacer(modifier = Modifier.height(16.dp))
         }
+
         // Respuesta
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(value = respuesta, onValueChange = {
             respuesta = it
-        }, label={
-            Text(text = "Respuesta",
+        }, label = {
+            Text(
+                text = "Respuesta",
                 color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
+                fontFamily = FontFamily.Serif
+            )
         })
 
         // Boton Aceptar
-            Spacer(modifier = Modifier.height(16.dp))
-        Button(modifier = Modifier
-            .width(200.dp)
-            .height(50.dp),
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(
+            modifier = Modifier
+                .width(200.dp)
+                .height(50.dp),
             onClick = {
-                navegation.navigate("Restablecer")
+                viewModel.recuperarContrasena(email)
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)
             ),
             shape = CutCornerShape(8.dp)
         ) {
-            Text(text = "Aceptar",
+            Text(
+                text = "Aceptar",
                 color = colorResource(id = R.color.white),
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif)
-        }
-
-    }
-
-
-}
-
-@Composable
-fun Restablecer(navigationController: NavHostController){
-    BackgroundImage()
-
-    val navegation = navigationController
-    var password by remember { mutableStateOf("") }
-    var confirmarPassword by remember { mutableStateOf("") }
-    val scroll = rememberScrollState(0) //Estado scroll
-
-    Column (modifier = Modifier
-        .fillMaxSize()
-        .verticalScroll(scroll)   //Habilitar el scroll verticalmente
-        .navigationBarsPadding(), // Habilitar padding para la barra de navegación,
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ){
-        Spacer(modifier = Modifier.height(16.dp))
-        Text(text = "Restablecer Contraseña", fontSize = 28.sp, fontWeight = FontWeight.Bold)
-
-        //Contraseña
-        Spacer(modifier = Modifier.height(16.dp))
-        var isPasswordVisible by remember { mutableStateOf(false) }
-        OutlinedTextField(value = password, onValueChange = {
-            password = it
-        }, label={
-            Text(text = "Contraseña",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        },visualTransformation = if (isPasswordVisible) VisualTransformation.None else
-            PasswordVisualTransformation(),
-            trailingIcon = {
-                Icon(painter =
-                if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility)
-                else painterResource(id = R.drawable.ic_visibility_off),
-                    contentDescription = null,
-                    modifier = Modifier.clickable {
-                        isPasswordVisible = !isPasswordVisible
-                    }
-                )
-            })
-
-        //Contraseña validar
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = confirmarPassword, onValueChange = {
-            confirmarPassword = it
-        }, label={
-            Text(text = "Validar Contraseña",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        },visualTransformation = if (isPasswordVisible) VisualTransformation.None else
-            PasswordVisualTransformation(),
-            trailingIcon = {
-                Icon(painter =
-                if (isPasswordVisible) painterResource(id = R.drawable.ic_visibility)
-                else painterResource(id = R.drawable.ic_visibility_off),
-                    contentDescription = null,
-                    modifier = Modifier.clickable {
-                        isPasswordVisible = !isPasswordVisible
-                    }
-                )
-            })
-        // Boton Añadir
-        Spacer(modifier = Modifier.height(16.dp))
-        Button(modifier = Modifier
-            .width(200.dp)
-            .height(50.dp),
-            onClick = {
-                navegation.navigate("Login")
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xff1C2D66)
-            ),
-            shape = CutCornerShape(8.dp)
-        ) {
-            Text(text = "Restablecer",
-                color = colorResource(id = R.color.white),
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif)
+                fontFamily = FontFamily.Serif
+            )
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package com.example.colorsandvision.Navegation
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -11,7 +12,6 @@ import com.example.colorsandvision.Login
 import com.example.colorsandvision.Menu
 import com.example.colorsandvision.Recuperar
 import com.example.colorsandvision.RegistroPaciente
-import com.example.colorsandvision.Restablecer
 import com.example.colorsandvision.Venta
 
 
@@ -42,9 +42,6 @@ fun NavManager(){
         }
         composable("Recuperar"){
             Recuperar(navigationController)
-        }
-        composable("Restablecer"){
-            Restablecer(navigationController)
         }
     }
 }
