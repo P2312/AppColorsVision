@@ -11,7 +11,6 @@ import com.example.colorsandvision.Login
 import com.example.colorsandvision.Menu
 import com.example.colorsandvision.Recuperar
 import com.example.colorsandvision.RegistroPaciente
-import com.example.colorsandvision.Restablecer
 import com.example.colorsandvision.Venta
 
 
@@ -42,9 +41,6 @@ fun NavManager(){
         }
         composable("Recuperar"){
             Recuperar(navigationController)
-        }
-        composable("Restablecer"){
-            Restablecer(navigationController)
         }
     }
 }
