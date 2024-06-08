@@ -47,9 +47,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.colorsandvision.viewModels.PasswordViewModel
 
 @Composable
-fun Recuperar (navigationController: NavHostController){
+fun Recuperar (navigationController: NavHostController,passwordViewModel: PasswordViewModel){
     BackgroundImage()
 
     val navegation = navigationController

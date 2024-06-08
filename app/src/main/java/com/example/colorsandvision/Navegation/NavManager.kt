@@ -1,6 +1,5 @@
 package com.example.colorsandvision.Navegation
 
-import Recuperar
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -10,6 +9,7 @@ import com.example.colorsandvision.Empleado
 import com.example.colorsandvision.ExamenVista
 import com.example.colorsandvision.Login
 import com.example.colorsandvision.Menu
+import com.example.colorsandvision.Recuperar
 import com.example.colorsandvision.RegistroPaciente
 import com.example.colorsandvision.Venta
 import com.example.colorsandvision.viewModels.PasswordViewModel
