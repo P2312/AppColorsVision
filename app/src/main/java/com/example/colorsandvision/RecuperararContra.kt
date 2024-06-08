@@ -1,61 +1,63 @@
 package com.example.colorsandvision
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Warning
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import com.example.colorsandvision.viewModels.PasswordViewModel
+import com.example.colorsandvision.Components.Alert
 
 @Composable
 fun Recuperar (navigationController: NavHostController,passwordViewModel: PasswordViewModel){
     BackgroundImage()
+    val navController = navigationController
+    val emailState = remember { mutableStateOf("") }
 
-    val navegation = navigationController
-
-    var email by remember { mutableStateOf("") }
+    // Manejar la alerta
+    if (passwordViewModel.showAlert) {
+        if (passwordViewModel.showAlert) {
+            Alert(
+                title = "Restablecer contraseña",
+                message = passwordViewModel.alertMessage,
+                confirmText = "Sí",
+                onConfirmClick = {
+                    Log.d("Recuperar", "Botón 'Sí' en cuadro de diálogo de alerta presionado")
+                    passwordViewModel.confirmRecuperarContrasena(true,navigationController)
+                },
+                onDismissClick = {
+                    Log.d("Recuperar", "Cuadro de diálogo de alerta cerrado sin confirmar")
+                    passwordViewModel.closeAlert()
+                }
+            )
+        }
+    }
 
     Column (modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -76,13 +78,36 @@ fun Recuperar (navigationController: NavHostController,passwordViewModel: Passwo
 
         // Email
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = email, onValueChange = {
-            email = it
-        }, label={
-            Text(text = "Email",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = emailState.value,
+            onValueChange = { emailState.value = it },
+            label = { Text(text = "Email") },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            trailingIcon = {
+                if (emailState.value.isNotEmpty()) {
+                    Button(
+                        onClick = {
+                            Log.d("Recuperar", "Botón 'Enviar' presionado")
+                            passwordViewModel.recuperarContrasena(emailState.value)
+                        },
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = Color.White
+                        )
+                    ) {
+                        Text(text = "Enviar")
+                    }
+                }
+            },
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+            keyboardActions = KeyboardActions(
+                onSend = {
+                    Log.d("Recuperar", "Tecla 'Enviar' presionada en el teclado")
+                    passwordViewModel.recuperarContrasena(emailState.value)
+                }
+            )
+        )
 
         // Boton Aceptar
             Spacer(modifier = Modifier.height(16.dp))
@@ -90,7 +115,7 @@ fun Recuperar (navigationController: NavHostController,passwordViewModel: Passwo
             .width(200.dp)
             .height(50.dp),
             onClick = {
-                navegation.navigate("Login")
+                navController.navigate("Login")
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)
@@ -105,6 +130,14 @@ fun Recuperar (navigationController: NavHostController,passwordViewModel: Passwo
 
     }
 
+    // Observar cambios en resetPasswordEmailSent y manejar la navegación
+    if (passwordViewModel.resetPasswordEmailSent) {
+        LaunchedEffect(Unit) {
+            Log.d("Recuperar", "Navegando a 'inicio' después de enviar correo electrónico de recuperación")
+            navigationController.navigate("inicio")
+        }
+    }
 
 }
+
 
