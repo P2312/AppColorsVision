@@ -14,11 +14,12 @@ class LoginViewModel : ViewModel() {
 
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
     private val _loading = MutableLiveData(false)
-    private val firebaseAuth = FirebaseAuth.getInstance()
 
     var showAlert by mutableStateOf(false)
     var alertMessage by mutableStateOf("")
     var alertEmail by mutableStateOf("")
+    var resetPasswordEmailSent by mutableStateOf(false)
+
 
     fun closeAlert() {
         showAlert = false
@@ -83,20 +84,4 @@ class LoginViewModel : ViewModel() {
         showAlert = true
     }
 
-    fun recuperarContrasena(email: String) {
-        alertMessage = "¿Estás seguro de que quieres restablecer la contraseña para $email?"
-        alertEmail = email
-        showAlert = true
-    }
-
-    fun sendPasswordResetEmail(email: String) {
-        firebaseAuth.sendPasswordResetEmail(email)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Log.d("Recuperar Contraseña", "Correo de restablecimiento de contraseña enviado")
-                } else {
-                    Log.e("Recuperar Contraseña", "Error al enviar el correo de restablecimiento de contraseña", task.exception)
-                }
-            }
-    }
 }
