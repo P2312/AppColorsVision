@@ -417,8 +417,7 @@ fun LoginEmpleado(navegation:NavHostController, loginVM: LoginViewModel) {
                 containerColor = Color(0xff1C2D66)),
             shape = CutCornerShape(8.dp)
         ) {
-            Text(
-                text = "Registrarse",
+            Text(text = "Registrarse",
                 fontFamily = FontFamily.Serif,
                 fontWeight = FontWeight.Bold)
         }
@@ -431,7 +430,7 @@ fun LoginEmpleado(navegation:NavHostController, loginVM: LoginViewModel) {
             }
         }
 
-            Spacer(modifier = Modifier.height(20.dp))
+        Spacer(modifier = Modifier.height(20.dp))
         TextButton(
             onClick = {
                 navegation.navigate("Login")
