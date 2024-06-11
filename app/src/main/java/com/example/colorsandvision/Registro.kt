@@ -29,10 +29,10 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-
 
 @Composable
 fun FondoRegistro(){
@@ -51,34 +51,36 @@ fun FondoRegistro(){
 }
 
 @Composable
-fun RegistroPaciente(navigationController: NavHostController){
+fun RegistroPaciente(navigationController: NavHostController
+
+){
     FondoRegistro()
 
     val navegation = navigationController
 
     var nombre by remember {
-        mutableStateOf("")
+        mutableStateOf(TextFieldValue(""))
     }
-    var apellidoP by remember {
-        mutableStateOf("")
+    var apellidop by remember {
+        mutableStateOf(TextFieldValue(""))
     }
-    var apellidoM by remember {
-        mutableStateOf("")
+    var apellidom by remember {
+        mutableStateOf(TextFieldValue(""))
     }
     var celular by remember {
-        mutableStateOf("")
+        mutableStateOf(TextFieldValue(""))
     }
     var ocupacion by remember {
-        mutableStateOf("")
+        mutableStateOf(TextFieldValue(""))
     }
     var enfermedades by remember {
-        mutableStateOf("")
+        mutableStateOf(TextFieldValue(""))
     }
     var observaciones by remember {
-        mutableStateOf("")
+        mutableStateOf(TextFieldValue(""))
     }
     var edad by remember {
-        mutableStateOf("")
+        mutableStateOf(TextFieldValue(""))
     }
 
     //Cuestionario
@@ -110,8 +112,8 @@ fun RegistroPaciente(navigationController: NavHostController){
 
         //ApellidoPaterno
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = apellidoP, onValueChange = {
-            apellidoP = it
+        OutlinedTextField(value = apellidop, onValueChange = {
+            apellidop = it
         }, label={
             Text(text = "Apellido Paterno",
                 color = colorResource(id = R.color.AzulMarino),
@@ -120,8 +122,8 @@ fun RegistroPaciente(navigationController: NavHostController){
 
         //ApellidoPaterno
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = apellidoM, onValueChange = {
-            apellidoM = it
+        OutlinedTextField(value = apellidom, onValueChange = {
+            apellidom = it
         }, label={
             Text(text = "Apellido Materno",
                 color = colorResource(id = R.color.AzulMarino),
@@ -185,7 +187,12 @@ fun RegistroPaciente(navigationController: NavHostController){
             .width(200.dp)
             .height(50.dp),
             onClick = {
-                navegation.navigate("Examen")
+
+
+                    navegation.navigate("Examen")
+
+
+
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff1C2D66)),
@@ -201,7 +208,7 @@ fun RegistroPaciente(navigationController: NavHostController){
         //Boton cancelar
         Spacer(modifier = Modifier.height(16.dp))
         Button(modifier = Modifier.width(200.dp).height(50.dp),
-            onClick = { navegation.navigate("Menu") },
+            onClick = { navegation.navigate("Examen") },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)
@@ -217,3 +224,5 @@ fun RegistroPaciente(navigationController: NavHostController){
     }
 
 }
+
+

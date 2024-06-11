@@ -18,4 +18,6 @@ data class UserModel(
             "userapellido" to this.userapellido
         )
     }
+
 }
+

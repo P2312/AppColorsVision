@@ -3,20 +3,17 @@
 package com.example.colorsandvision
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.CutCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
@@ -43,7 +40,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.navigation.NavHostController
 
 
@@ -121,13 +117,13 @@ fun ExamenVista(navigationController: NavHostController){
         Spacer(modifier = Modifier.height(16.dp))
         Card (modifier = Modifier
             .width(320.dp)
-            .height(120.dp),
+            .height(180.dp),
             elevation = CardDefaults.cardElevation(1.dp),//Elevacion de la card
             colors = CardDefaults.cardColors(containerColor = Color.Transparent),
             shape = CutCornerShape(8.dp)){
             // Nombre, Edad y Enfermedad
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "  Nombre: \n  Edad: \n  Enfermedad: ",
+            Text(text = "  Nombre: \n  Edad: \n  Enfermedad: \n  Observaciones: ",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif,
                 lineHeight = 2.em)

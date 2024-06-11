@@ -74,8 +74,10 @@ dependencies {
     implementation(libs.firebase.auth.ktx)
     implementation(libs.androidx.compose.material)
 
-
-
+    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
+    implementation("mysql:mysql-connector-java:5.1.49")
+    implementation(libs.firebase.ml.modeldownloader.ktx)
+    implementation(libs.androidx.recyclerview)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

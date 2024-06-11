@@ -14,7 +14,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -22,10 +21,8 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -94,17 +91,14 @@ fun Venta(navigationController: NavHostController){
         Spacer(modifier = Modifier.height(16.dp))
         Card (modifier = Modifier
             .width(290.dp)
-            .height(590.dp),
+            .height(120.dp),
             elevation = CardDefaults.cardElevation(1.dp),//Elevacion de la card
             colors = CardDefaults.cardColors(containerColor = Color.White),
             shape = CutCornerShape(8.dp)
         ){
             // Nombre y fecha
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "  Fecha:$dateFormat \n  Nombre: \n  Edad: \n  Enfermedad: \n" +
-                    "  Linea OD: \n  Linea OI: \n  Linea AOOI: \n  Linea AOOI: \n" +
-                    "  Esfera OD: \n  Esfera OI: \n  Cilindro OD: \n  Cilindro OI: \n" +
-                    "  Presbicia OD: \n  Presbicia OD: \n  Observaciones: \n",
+            Text(text = "  Fecha:$dateFormat \n  Nombre: \n  Edad: ",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif,
                 lineHeight = 2.em)
@@ -189,6 +183,23 @@ fun Venta(navigationController: NavHostController){
                 fontWeight = FontWeight.Bold,
                 fontFamily = FontFamily.Serif)
         }
+        //Boton Regresar
+        Spacer(modifier = Modifier.height(16.dp))
+        Button(modifier = Modifier
+            .width(200.dp)
+            .height(50.dp),
+            onClick = {
+                navegation.navigate("Menu")
+            },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xff1C2D66)),
+            shape = CutCornerShape(8.dp)
 
+        ) {
+            Text(text = "Regresar",
+                color = colorResource(id = R.color.white),
+                fontWeight = FontWeight.Bold,
+                fontFamily = FontFamily.Serif)
+        }
     }
 }

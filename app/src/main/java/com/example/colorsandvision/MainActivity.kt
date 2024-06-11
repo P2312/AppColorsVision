@@ -51,23 +51,61 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.example.colorsandvision.BasedeDatos.MySQLConnector
 import com.example.colorsandvision.Components.Alert
 import com.example.colorsandvision.Navegation.NavManager
 import com.example.colorsandvision.ui.theme.ColorsAndVisionTheme
 import com.example.colorsandvision.viewModels.LoginViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.sql.Connection
-import java.sql.DriverManager
+
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Habilitar políticas de red en el hilo principal (no recomendado para producción)
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
+
 
         enableEdgeToEdge()
         setContent {
             ColorsAndVisionTheme {
+                //NavManager()
                 NavManager()
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+fun MyApp() {
+    var data by remember { mutableStateOf<List<String>>(emptyList()) }
+
+    LaunchedEffect(Unit) {
+        withContext(Dispatchers.IO) {
+            val connector = MySQLConnector(
+                url = "bvfmo3g7csbyblhrgbbh-mysql.services.clever-cloud.com",
+                user = "INTEF_SQL",
+                password = "vUsUfq8ZhiGa2ifjzbiy"
+            )
+            data = connector.getData("SELECT nombre FROM paciente")
+        }
+    }
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("MySQL Data") }
+            )
+        }
+    ) {
+        LazyColumn(modifier = Modifier.padding(16.dp)) {
+            items(data) { item ->
+                Text(text = item, modifier = Modifier.padding(8.dp))
             }
         }
     }

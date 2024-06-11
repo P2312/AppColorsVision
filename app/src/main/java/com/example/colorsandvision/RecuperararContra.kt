@@ -109,24 +109,6 @@ fun Recuperar (navigationController: NavHostController,passwordViewModel: Passwo
             )
         )
 
-        // Boton Aceptar
-            Spacer(modifier = Modifier.height(16.dp))
-        Button(modifier = Modifier
-            .width(200.dp)
-            .height(50.dp),
-            onClick = {
-                navController.navigate("Login")
-            },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xff1C2D66)
-            ),
-            shape = CutCornerShape(8.dp)
-        ) {
-            Text(text = "Recuperar",
-                color = colorResource(id = R.color.white),
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif)
-        }
 
     }
 
