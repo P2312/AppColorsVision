@@ -30,6 +30,9 @@ android {
             )
         }
     }
+
+
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -78,6 +81,7 @@ dependencies {
     implementation("mysql:mysql-connector-java:5.1.49")
     implementation(libs.firebase.ml.modeldownloader.ktx)
     implementation(libs.androidx.recyclerview)
+    implementation(libs.androidx.runtime.livedata)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

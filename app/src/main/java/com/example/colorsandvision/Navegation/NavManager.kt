@@ -12,6 +12,7 @@ import com.example.colorsandvision.Menu
 import com.example.colorsandvision.Recuperar
 import com.example.colorsandvision.RegistroPaciente
 import com.example.colorsandvision.Venta
+import com.example.colorsandvision.viewModels.PacienteViewModel
 import com.example.colorsandvision.viewModels.PasswordViewModel
 import com.google.firebase.database.FirebaseDatabase
 
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase
 fun NavManager(){
     val navigationController = rememberNavController()
     var database = FirebaseDatabase.getInstance().reference
+    var pacienteVM = PacienteViewModel()
 
     NavHost(navController = navigationController, startDestination = "Login"){
         composable("Login"){
@@ -35,7 +37,7 @@ fun NavManager(){
             RegistroPaciente(navigationController)
         }
         composable("Examen"){
-            ExamenVista(navigationController)
+            ExamenVista(navigationController, pacienteVM)
         }
         composable("Venta"){
             Venta(navigationController)

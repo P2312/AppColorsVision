@@ -18,16 +18,17 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,9 +39,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.wear.compose.material.MaterialTheme
+import com.example.colorsandvision.viewModels.PacienteViewModel
+import kotlinx.coroutines.launch
 
 
 @Composable
@@ -61,7 +64,7 @@ fun FondoExamen(){
 
 
 @Composable
-fun ExamenVista(navigationController: NavHostController){
+fun ExamenVista(navigationController: NavHostController, pacienteVM: PacienteViewModel){
     FondoExamen()
 
     val navegation = navigationController
@@ -80,6 +83,11 @@ fun ExamenVista(navigationController: NavHostController){
     var obser by remember { mutableStateOf("") }
 
     val scroll = rememberScrollState(0) //Estado scroll
+
+    val searchResult by pacienteVM.searchPacienteResult.observeAsState()
+
+    var searchQuery by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
     Column (
         modifier = Modifier
@@ -103,19 +111,27 @@ fun ExamenVista(navigationController: NavHostController){
         // Buscador
         Spacer(modifier = Modifier.height(16.dp))
         var buscador by remember { mutableStateOf(false) }
-        OutlinedTextField(value = IDPaciente, onValueChange = {
-            IDPaciente = it
+        OutlinedTextField(value = searchQuery, onValueChange = {
+            searchQuery = it
         }, label={
-            Text(text = "ID Paciente",
+            Text(text = "ID Paciente o celular",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif)
         }, trailingIcon ={
-            Icon(imageVector = Icons.Default.Search, contentDescription = "Buscador")
+            IconButton(onClick = {
+                if (searchQuery.isNotEmpty()) {
+                    coroutineScope.launch {
+                        pacienteVM.searchPacienteByIdOrCelular(searchQuery)
+                    }
+                }
+            }){
+                Icon(imageVector = Icons.Default.Search, contentDescription = "Buscador" )
+            }
         })
 
         //Card para los datos
         Spacer(modifier = Modifier.height(16.dp))
-        Card (modifier = Modifier
+        /*Card (modifier = Modifier
             .width(320.dp)
             .height(180.dp),
             elevation = CardDefaults.cardElevation(1.dp),//Elevacion de la card
@@ -123,11 +139,29 @@ fun ExamenVista(navigationController: NavHostController){
             shape = CutCornerShape(8.dp)){
             // Nombre, Edad y Enfermedad
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "  Nombre: \n  Edad: \n  Enfermedad: \n  Observaciones: ",
+            Text(text = "  Nombre:  \n  Edad: \n  Enfermedad: \n  Observaciones: ",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif,
                 lineHeight = 2.em)
             Spacer(modifier = Modifier.height(16.dp))
+        }*/
+        searchResult?.let { result ->
+            result.onSuccess { paciente ->
+                Text("Nombre: ${paciente.nombre}",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+                Text("Edad: ${paciente.edad}",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+                Text("Enfermedades: ${paciente.enfermedades}",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+                Text("Observaciones: ${paciente.observaciones}",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            }.onFailure { exception ->
+                Text("Error: ${exception.message}", color = MaterialTheme.colors.error)
+            }
         }
 
 

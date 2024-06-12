@@ -40,8 +40,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import java.text.DateFormat
 
+
 @Composable
 fun Venta(navigationController: NavHostController){
+
     FondoRegistro()
     val scroll = rememberScrollState(0) //Estado scroll
     val navegation = navigationController
@@ -54,8 +56,11 @@ fun Venta(navigationController: NavHostController){
     var serie by remember { mutableStateOf("") }
     var material by remember { mutableStateOf("") }
     var accerorio by remember { mutableStateOf("") }
+    var tratamiento by remember { mutableStateOf("") }
+    var precioLente by remember { mutableStateOf("") }
+    var precioAdic by remember { mutableStateOf("") }
     var fechaentrega by remember { mutableStateOf("") }
-    var total by remember { mutableStateOf("") }
+    val total = precioAdic.toDouble()+precioLente.toDouble()+200
 
     Column (
         modifier = Modifier.fillMaxSize()
@@ -98,7 +103,7 @@ fun Venta(navigationController: NavHostController){
         ){
             // Nombre y fecha
             Spacer(modifier = Modifier.height(16.dp))
-            Text(text = "  Fecha:$dateFormat \n  Nombre: \n  Edad: ",
+            Text(text = "  Fecha:$dateFormat \n  Nombre: \n  Edad: \n  Celular:",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif,
                 lineHeight = 2.em)
@@ -111,26 +116,6 @@ fun Venta(navigationController: NavHostController){
             modelo = it
         }, label={
             Text(text = "Modelo",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
-
-        // Precio del modelo
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = modelo, onValueChange = {
-            modelo = it
-        }, label={
-            Text(text = "Precio del lente",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
-
-        // Tratamiento
-        Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = modelo, onValueChange = {
-            modelo = it
-        }, label={
-            Text(text = "Tratamiento",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif)
         })
@@ -164,11 +149,29 @@ fun Venta(navigationController: NavHostController){
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif)
         })
+        // Tratamiento
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(value = tratamiento, onValueChange = {
+            tratamiento = it
+        }, label={
+            Text(text = "Tratamiento",
+                color = colorResource(id = R.color.AzulMarino),
+                fontFamily = FontFamily.Serif)
+        })
+        // Precio del modelo
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(value = precioLente, onValueChange = {
+            precioLente = it
+        }, label={
+            Text(text = "Precio del lente",
+                color = colorResource(id = R.color.AzulMarino),
+                fontFamily = FontFamily.Serif)
+        })
 
         // Precio adicional
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = modelo, onValueChange = {
-            modelo = it
+        OutlinedTextField(value = precioAdic, onValueChange = {
+            precioAdic = it
         }, label={
             Text(text = "Precio adicional",
                 color = colorResource(id = R.color.AzulMarino),
@@ -186,14 +189,10 @@ fun Venta(navigationController: NavHostController){
         })
 
         // Total
-        Spacer(modifier = Modifier.height(16.dp)) //esta linea me hace un espacio entre los componentes
-        OutlinedTextField(value = total, onValueChange = {
-            total = it
-        }, label={
-            Text(text = "Total",
+        Text(text = "$total",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif)
-        })
+        //total= preciodelente+precioadd+200*(serie)
 
         //Boton Guardar
         Spacer(modifier = Modifier.height(16.dp))
