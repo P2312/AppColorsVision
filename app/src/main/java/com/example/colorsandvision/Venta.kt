@@ -115,6 +115,26 @@ fun Venta(navigationController: NavHostController){
                 fontFamily = FontFamily.Serif)
         })
 
+        // Precio del modelo
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(value = modelo, onValueChange = {
+            modelo = it
+        }, label={
+            Text(text = "Precio del lente",
+                color = colorResource(id = R.color.AzulMarino),
+                fontFamily = FontFamily.Serif)
+        })
+
+        // Tratamiento
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(value = modelo, onValueChange = {
+            modelo = it
+        }, label={
+            Text(text = "Tratamiento",
+                color = colorResource(id = R.color.AzulMarino),
+                fontFamily = FontFamily.Serif)
+        })
+
         // Serie
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(value = serie, onValueChange = {
@@ -141,6 +161,16 @@ fun Venta(navigationController: NavHostController){
             accerorio = it
         }, label={
             Text(text = "Accesorio",
+                color = colorResource(id = R.color.AzulMarino),
+                fontFamily = FontFamily.Serif)
+        })
+
+        // Precio adicional
+        Spacer(modifier = Modifier.height(16.dp))
+        OutlinedTextField(value = modelo, onValueChange = {
+            modelo = it
+        }, label={
+            Text(text = "Precio adicional",
                 color = colorResource(id = R.color.AzulMarino),
                 fontFamily = FontFamily.Serif)
         })
