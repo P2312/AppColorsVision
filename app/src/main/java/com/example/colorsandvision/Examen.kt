@@ -121,7 +121,8 @@ fun ExamenVista(navigationController: NavHostController, pacienteVM: PacienteVie
             IconButton(onClick = {
                 if (searchQuery.isNotEmpty()) {
                     coroutineScope.launch {
-                        pacienteVM.searchPacienteByIdOrCelular(searchQuery)
+                        //pacienteVM.searchPacienteByIdOrCelular(searchQuery)
+                        pacienteVM.searchPacienteByCelular(searchQuery)
                     }
                 }
             }){

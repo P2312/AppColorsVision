@@ -26,6 +26,7 @@ class PacienteViewModel : ViewModel() {
                 _addPacienteResult.postValue(Result.failure(exception))
             }
     }
+/*
     fun searchPacienteByIdOrCelular(query: String) {
         firestore.collection("pacientes")
             .whereEqualTo("pacienteId", query)
@@ -56,4 +57,27 @@ class PacienteViewModel : ViewModel() {
                 _searchPacienteResult.postValue(Result.failure(exception))
             }
     }
+*/
+fun searchPacienteByCelular(celular: String) {
+    try {
+        val celularQuery = celular.toInt()
+        firestore.collection("pacientes")
+            .whereEqualTo("celular", celularQuery)
+            .get()
+            .addOnSuccessListener { documents ->
+                if (!documents.isEmpty) {
+                    val paciente = documents.documents[0].toObject(PacienteModel::class.java)
+                    _searchPacienteResult.postValue(Result.success(paciente!!))
+                } else {
+                    _searchPacienteResult.postValue(Result.failure(Exception("No se encontró el paciente con el número de celular proporcionado.")))
+                }
+            }
+            .addOnFailureListener { exception ->
+                _searchPacienteResult.postValue(Result.failure(exception))
+            }
+    } catch (e: NumberFormatException) {
+        _searchPacienteResult.postValue(Result.failure(Exception("El número de celular proporcionado no es válido.")))
+    }
+}
+
 }
