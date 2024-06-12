@@ -29,7 +29,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -51,37 +50,40 @@ fun FondoRegistro(){
 }
 
 @Composable
-fun RegistroPaciente(navigationController: NavHostController
-
-){
+fun RegistroPaciente(navigationController: NavHostController){
     FondoRegistro()
 
     val navegation = navigationController
 
     var nombre by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
-    var apellidop by remember {
-        mutableStateOf(TextFieldValue(""))
+    var apellidoP by remember {
+        mutableStateOf("")
     }
-    var apellidom by remember {
-        mutableStateOf(TextFieldValue(""))
+    var apellidoM by remember {
+        mutableStateOf("")
     }
     var celular by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
     var ocupacion by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
     var enfermedades by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
     var observaciones by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
     var edad by remember {
-        mutableStateOf(TextFieldValue(""))
+        mutableStateOf("")
     }
+
+    // expresiones regulares para las validaciones
+    val nombreApellidoRegex = Regex("^[a-zA-Z]*\$")
+    val celularRegex = Regex("^[0-9]*\$")
+    val edadRegex = Regex("^[0-9]{1,3}\$")
 
     //Cuestionario
     Column (
@@ -102,127 +104,174 @@ fun RegistroPaciente(navigationController: NavHostController
 
         //Nombre
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = nombre, onValueChange = {
-            nombre = it
-        }, label={
-            Text(text = "Nombre",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = nombre,
+            onValueChange = {
+                if (nombreApellidoRegex.matches(it)) {
+                    nombre = it
+                }
+            },
+            label={
+                Text(text = "Nombre",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            }
+        )
 
-        //ApellidoPaterno
+        //Apellido Paterno
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = apellidop, onValueChange = {
-            apellidop = it
-        }, label={
-            Text(text = "Apellido Paterno",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = apellidoP,
+            onValueChange = {
+                if (nombreApellidoRegex.matches(it)) {
+                    apellidoP = it
+                }
+            },
+            label={
+                Text(text = "Apellido Paterno",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            }
+        )
 
-        //ApellidoPaterno
+        //Apellido Materno
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = apellidom, onValueChange = {
-            apellidom = it
-        }, label={
-            Text(text = "Apellido Materno",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = apellidoM,
+            onValueChange = {
+                if (nombreApellidoRegex.matches(it)) {
+                    apellidoM = it
+                }
+            },
+            label={
+                Text(text = "Apellido Materno",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            }
+        )
 
         //Celular
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = celular, onValueChange = {
-            celular = it
-        }, label={
-            Text(text = "Celular",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        // En el onValueChange de OutlinedTextField de Celular:
+        OutlinedTextField(
+            value = celular,
+            onValueChange = {
+                if (it.isEmpty() || celularRegex.matches(it)) {
+                    celular = it
+                }
+            },
+            label={
+                Text(
+                    text = "Celular",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+            }
+        )
 
         //Edad
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = edad, onValueChange = {
-            edad = it
-        }, label={
-            Text(text = "Edad",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = edad,
+            onValueChange = {
+                if (edadRegex.matches(it)) {
+                    edad = it
+                }
+            },
+            label={
+                Text(text = "Edad",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            }
+        )
 
         //Ocupacion
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = ocupacion, onValueChange = {
-            ocupacion = it
-        }, label={
-            Text(text = "Ocupación",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = ocupacion,
+            onValueChange = {
+                if (nombreApellidoRegex.matches(it)) {
+                    ocupacion = it
+                }
+            },
+            label={
+                Text(text = "Ocupación",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            }
+        )
 
         //Enfermedades
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = enfermedades, onValueChange = {
-            enfermedades = it
-        }, label={
-            Text(text = "Enfermedades",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        })
+        OutlinedTextField(
+            value = enfermedades,
+            onValueChange = {
+                if (nombreApellidoRegex.matches(it)) {
+                    enfermedades = it
+                }
+            },
+            label={
+                Text(text = "Enfermedades",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            }
+        )
 
         //Observaciones
         Spacer(modifier = Modifier.height(16.dp))
-        OutlinedTextField(value = observaciones, onValueChange = {
-            observaciones = it
-        }, label={
-            Text(text = "Observaciones",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif)
-        },
-            maxLines = 50)
+        OutlinedTextField(
+            value = observaciones,
+            onValueChange = {
+                if (nombreApellidoRegex.matches(it)) {
+                    observaciones = it
+                }
+            },
+            label={
+                Text(text = "Observaciones",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif)
+            },
+            maxLines = 50
+        )
 
         //Boton Añadir
         Spacer(modifier = Modifier.height(16.dp))
-        Button(modifier = Modifier
-            .width(200.dp)
-            .height(50.dp),
+        Button(
+            modifier = Modifier
+                .width(200.dp)
+                .height(50.dp),
             onClick = {
-
-
-                    navegation.navigate("Examen")
-
-
-
+                navegation.navigate("Examen")
             },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xff1C2D66)),
+                containerColor = Color(0xff1C2D66)
+            ),
             shape = CutCornerShape(8.dp)
-
         ) {
-            Text(text = "Añadir",
+            Text(
+                text = "Añadir",
                 color = colorResource(id = R.color.white),
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif)
+                fontFamily = FontFamily.Serif
+            )
         }
 
         //Boton cancelar
         Spacer(modifier = Modifier.height(16.dp))
-        Button(modifier = Modifier.width(200.dp).height(50.dp),
-            onClick = { navegation.navigate("Examen") },
+        Button(
+            modifier = Modifier.width(200.dp).height(50.dp),
+            onClick = { navegation.navigate("Menu") },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xff64BDCD)),
+                containerColor = Color(0xff64BDCD)
+            ),
             shape = CutCornerShape(8.dp)
-
         ) {
-            Text(text = "Cancelar",
+            Text(
+                text = "Cancelar",
                 color = colorResource(id = R.color.AzulMarino),
                 fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Serif)
+                fontFamily = FontFamily.Serif
+            )
         }
-
-
     }
-
 }
-
-
