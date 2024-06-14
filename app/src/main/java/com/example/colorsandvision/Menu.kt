@@ -59,10 +59,10 @@ fun Menu(navigationController: NavHostController){
                 navegation.navigate("Paciente")
             },
             colors = ButtonDefaults.buttonColors(
-            containerColor = Color(0xff64BDCD)),
+                containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)
 
-            ) {
+        ) {
             Text(text = "Registrar",
                 fontFamily = FontFamily.Serif,
                 color = colorResource(id = R.color.AzulMarino),
@@ -128,4 +128,3 @@ fun Menu(navigationController: NavHostController){
 
     }
 }
-
