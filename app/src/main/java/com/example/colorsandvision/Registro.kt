@@ -1,3 +1,4 @@
+
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.example.colorsandvision
@@ -86,9 +87,9 @@ fun RegistroPaciente(navigationController: NavHostController){
     }
 
     // expresiones regulares para las validaciones
-    val nombreApellidoRegex = Regex("^[a-zA-Z]*\$")
-    val celularRegex = Regex("^[0-9]*\$")
-    val edadRegex = Regex("^[0-9]{1,3}\$")
+    val nombreApellidoRegex = Regex("^[a-zA-Z ]*$")
+    val celularRegex = Regex("^[0-9]*$")
+    val edadRegex = Regex("^[0-9]{1,3}$")
 
     //Cuestionario
     LazyColumn(
