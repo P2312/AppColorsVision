@@ -86,7 +86,7 @@ fun searchPacienteByCelular(celular: String) {
             var pacienteEncontrado: PacienteModel? = null
             for (document in documents) {
                 val paciente = document.toObject(PacienteModel::class.java)
-                if (paciente.celular == celular.toInt()) {
+                if (paciente.celular.equals(celular.toInt())) {
                     pacienteEncontrado = paciente
                     break
                 }
