@@ -1,4 +1,3 @@
-
 @file:OptIn(ExperimentalMaterial3Api::class)
 
 package com.example.colorsandvision
@@ -34,9 +33,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import com.example.colorsandvision.model.PacienteModel
-import com.example.colorsandvision.viewModels.PacienteViewModel
-import java.util.UUID
 
 @Composable
 fun FondoRegistro(){
@@ -59,7 +55,6 @@ fun RegistroPaciente(navigationController: NavHostController){
     FondoRegistro()
 
     val navegation = navigationController
-    val pacienteVM = PacienteViewModel()
 
     var nombre by remember {
         mutableStateOf("")
@@ -270,20 +265,7 @@ fun RegistroPaciente(navigationController: NavHostController){
                     .width(200.dp)
                     .height(50.dp),
                 onClick = {
-                    val paciente = PacienteModel(
-                        pacienteId = UUID.randomUUID().toString(), // o cualquier otro identificador único
-                        nombre = nombre,
-                        apellidop = apellidoP,
-                        apellidom = apellidoM,
-                        celular = celular,
-                        edad = edad,
-                        ocupacion = ocupacion,
-                        enfermedades = enfermedades,
-                        observaciones = observaciones
-                    )
-                    pacienteVM.addPaciente(paciente)
-                        navegation.navigate("Examen")
-
+                    navegation.navigate("Examen")
                 },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color(0xff1C2D66)
