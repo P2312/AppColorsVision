@@ -21,42 +21,100 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.google.firebase.firestore.FirebaseFirestore
 import java.text.DateFormat
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun Venta(navigationController: NavHostController) {
     FondoRegistro()
-    val scroll = rememberScrollState(0) // Estado scroll
+    val scroll = rememberScrollState(0)
     val navegation = navigationController
     val calendar = Calendar.getInstance().time
     val dateFormat = DateFormat.getDateInstance().format(calendar)
 
     var IDPaciente by remember { mutableStateOf("") }
     var nombre by remember { mutableStateOf("") }
-    var modelo by remember { mutableStateOf("") }
+    var idpaciente by remember { mutableStateOf("") }
+    var idventa by remember { mutableStateOf("") }
+    var edad by remember { mutableStateOf("") }
+    var celular by remember { mutableStateOf("") }
+    var idlente by remember { mutableStateOf("") }
     var serie by remember { mutableStateOf("") }
     var material by remember { mutableStateOf("") }
-    var accerorio by remember { mutableStateOf("") }
+    var articulo by remember { mutableStateOf("") }
     var tratamiento by remember { mutableStateOf("") }
-    var precioLente by remember { mutableStateOf("") }
-    var precioAdic by remember { mutableStateOf("") }
+    var precio by remember { mutableStateOf("") }
+    var precioaadd by remember { mutableStateOf("") }
+    var fechav by remember { mutableStateOf("") }
     var fechaentrega by remember { mutableStateOf("") }
 
     val total = try {
-        precioAdic.toDouble() + precioLente.toDouble() + 200
+        precioaadd.toDouble() + precio.toDouble() + 200
     } catch (e: NumberFormatException) {
         0.0
     }
 
+    // función fetch para tomar los datos de firbase de la tabla paciente
+    fun fetchPatientData(id: String) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("paciente").document(id)
+            .get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    nombre = document.getString("nombre") ?: ""
+                    edad = document.getString("edad") ?: ""
+                    celular = document.getString("celular") ?: ""
+                }
+            }
+            .addOnFailureListener { exception ->
+                // Handle the error
+            }
+    }
+    // función para guardar los datos en la tabla de venta de Firebase
+    fun guardarVenta() {
+        val db = FirebaseFirestore.getInstance()
+        val venta = hashMapOf(
+            "IDPaciente" to IDPaciente,
+            "nombre" to nombre,
+            "idpaciente" to idpaciente,
+            "idventa" to idventa,
+            "edad" to edad,
+            "celular" to celular,
+            "idlente" to idlente,
+            "serie" to serie,
+            "material" to material,
+            "articulo" to articulo,
+            "tratamiento" to tratamiento,
+            "precio" to precio.toDouble(),
+            "precioaadd" to precioaadd.toDouble(),
+            "fechav" to fechav,
+            "fechaentrega" to fechaentrega
+            // Agrega más campos según sea necesario
+        )
+
+        // Aquí se guarda en la colección 'ventas' de Firebase
+        db.collection("venta")
+            .add(venta)
+            .addOnSuccessListener {
+                // Éxito
+            }
+            .addOnFailureListener { e ->
+                // Manejar el error
+            }
+    }
+
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(scroll) // Habilitar el scroll verticalmente
-            .navigationBarsPadding(), // Habilitar padding para la barra de navegación
+            .verticalScroll(scroll)
+            .navigationBarsPadding(),
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // Venta
         Spacer(modifier = Modifier.height(50.dp))
         Text(
             text = "Venta",
@@ -66,12 +124,13 @@ fun Venta(navigationController: NavHostController) {
             color = colorResource(id = R.color.AzulMarino)
         )
 
-        // Buscador
         Spacer(modifier = Modifier.height(16.dp))
         var buscador by remember { mutableStateOf(false) }
         OutlinedTextField(
-            value = IDPaciente, onValueChange = {
+            value = IDPaciente,
+            onValueChange = {
                 IDPaciente = it
+                fetchPatientData(IDPaciente)
             },
             label = {
                 Text(
@@ -85,32 +144,46 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Fecha y Nombre
         Spacer(modifier = Modifier.height(16.dp))
         Card(
             modifier = Modifier
-                .width(290.dp)
-                .height(120.dp),
-            elevation = CardDefaults.cardElevation(1.dp), // Elevacion de la card
+                .width(350.dp)
+                .height(150.dp),
+            elevation = CardDefaults.cardElevation(1.dp),
             colors = CardDefaults.cardColors(containerColor = Color.White),
             shape = CutCornerShape(8.dp)
         ) {
-            // Nombre y fecha
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(
-                text = "  Fecha:$dateFormat \n  Nombre: \n  Edad: \n  Celular:",
-                color = colorResource(id = R.color.AzulMarino),
-                fontFamily = FontFamily.Serif,
-                lineHeight = 2.em
-            )
-            Spacer(modifier = Modifier.height(16.dp))
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Text(
+                    text = "Fecha: $dateFormat",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = "Nombre: $nombre",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+                Text(
+                    text = "Edad: $edad",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+                Text(
+                    text = "Celular: $celular",
+                    color = colorResource(id = R.color.AzulMarino),
+                    fontFamily = FontFamily.Serif
+                )
+            }
         }
 
-        // Modelo
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = modelo, onValueChange = {
-                modelo = it
+            value = idlente, onValueChange = {
+                idlente = it
             },
             label = {
                 Text(
@@ -121,7 +194,6 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Serie
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = serie, onValueChange = {
@@ -136,7 +208,6 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Material
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = material, onValueChange = {
@@ -151,11 +222,10 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Accesorio
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = accerorio, onValueChange = {
-                accerorio = it
+            value = articulo, onValueChange = {
+                articulo = it
             },
             label = {
                 Text(
@@ -166,7 +236,6 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Tratamiento
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = tratamiento, onValueChange = {
@@ -181,11 +250,10 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Precio del modelo
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = precioLente, onValueChange = {
-                precioLente = it
+            value = precio, onValueChange = {
+                precio = it
             },
             label = {
                 Text(
@@ -196,11 +264,10 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Precio adicional
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
-            value = precioAdic, onValueChange = {
-                precioAdic = it
+            value = precioaadd, onValueChange = {
+                precioaadd = it
             },
             label = {
                 Text(
@@ -211,7 +278,6 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Fecha de Entrega
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = fechaentrega, onValueChange = {
@@ -226,14 +292,13 @@ fun Venta(navigationController: NavHostController) {
             }
         )
 
-        // Total
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = "$total",
             color = colorResource(id = R.color.AzulMarino),
             fontFamily = FontFamily.Serif
         )
 
-        // Botón Guardar
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             modifier = Modifier
@@ -255,7 +320,6 @@ fun Venta(navigationController: NavHostController) {
             )
         }
 
-        // Botón Regresar
         Spacer(modifier = Modifier.height(16.dp))
         Button(
             modifier = Modifier
@@ -278,3 +342,10 @@ fun Venta(navigationController: NavHostController) {
         }
     }
 }
+
+@Preview(showBackground = true)
+@Composable
+fun PreviewVenta() {
+
+}
+

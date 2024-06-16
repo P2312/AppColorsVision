@@ -1,7 +1,7 @@
 @file:OptIn(ExperimentalMaterial3Api::class)
 
-package com.example.colorsandvision
 
+package com.example.colorsandvision
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -45,7 +45,6 @@ import androidx.wear.compose.material.MaterialTheme
 import com.example.colorsandvision.viewModels.PacienteViewModel
 import kotlinx.coroutines.launch
 
-
 @Composable
 fun FondoExamen(){
     val backgroundImage = painterResource(id = R.drawable.fondo4)
@@ -61,7 +60,6 @@ fun FondoExamen(){
         )
     }
 }
-
 
 @Composable
 fun ExamenVista(navigationController: NavHostController, pacienteVM: PacienteViewModel){
