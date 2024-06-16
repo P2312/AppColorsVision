@@ -75,7 +75,7 @@ fun Menu(navigationController: NavHostController){
             .width(200.dp)
             .height(50.dp),
             onClick = {
-                navegation.navigate("Examen")
+                navegation.navigate("Exámen")
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
@@ -94,14 +94,14 @@ fun Menu(navigationController: NavHostController){
             .width(200.dp)
             .height(50.dp),
             onClick = {
-                navegation.navigate("Catalogo")
+                navegation.navigate("Catálogo")
             },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xff64BDCD)),
             shape = CutCornerShape(8.dp)
 
         ) {
-            Text(text = "Catalogo",
+            Text(text = "Catálogo",
                 fontFamily = FontFamily.Serif,
                 color = colorResource(id = R.color.AzulMarino),
                 fontWeight = FontWeight.Bold)

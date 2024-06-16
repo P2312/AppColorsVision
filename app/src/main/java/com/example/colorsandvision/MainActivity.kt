@@ -162,7 +162,7 @@ fun LoginInicio(navegation:NavHostController, loginVM: LoginViewModel){
             color = colorResource(id = R.color.AzulMarino)
         )
         Spacer(modifier = Modifier.height(4.dp))
-        Text(text = "Iniciar Seción",
+        Text(text = "Iniciar Sesión",
             fontFamily = FontFamily.Serif,
             color = colorResource(id = R.color.AzulMarino))
 
